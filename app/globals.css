@@ -1,35 +1,56 @@
-:root {
+@import "tailwindcss";
+
+@theme {
   --color-navy: #263040;
   --color-blue: #066bf0;
   --color-nav-bg: #ededea;
+  --color-policy: #929292;
+  --color-subtext: #263040b2;
+  --color-overlay: #2630408c;
   --color-white: #ffffff;
   --color-grey: #6b7280;
+
+  --font-sans: var(--font-figtree), "Figtree", sans-serif;
+
+  --animate-fade-in: fade-in 200ms ease-out;
+  --animate-slide-up: slide-up 250ms ease-out;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-html,
-body {
-  height: 100%;
-}
+@layer base {
+  html,
+  body {
+    @apply h-full;
+  }
 
-body {
-  font-family: var(--font-figtree), "Figtree", sans-serif;
-  font-size: 16px;
-  color: var(--color-navy);
-  background-color: var(--color-white);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  html {
+    scroll-behavior: smooth;
+  }
 
-a {
-  transition: 150ms linear all;
+  body {
+    @apply font-sans text-base text-navy bg-white antialiased;
+  }
+
+  a {
+    @apply transition-all duration-150 ease-linear;
+  }
 }

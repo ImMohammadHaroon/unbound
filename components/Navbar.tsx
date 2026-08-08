@@ -2,9 +2,10 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useJoinNow } from "./JoinNowProvider";
+import Logo from "./Logo";
 import styles from "./Navbar.module.css";
 
 gsap.registerPlugin(useGSAP);
@@ -22,12 +23,13 @@ const NAV_LINKS = [
 const MOBILE_BREAKPOINT = "(max-width: 1100px)";
 
 export default function Navbar() {
+  const { openJoinModal } = useJoinNow();
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
-  const mobileButtonRef = useRef<HTMLAnchorElement>(null);
+  const mobileButtonRef = useRef<HTMLButtonElement>(null);
   const hasAnimatedRef = useRef(false);
 
   const openMenu = () => {
@@ -42,6 +44,11 @@ export default function Navbar() {
     } else {
       openMenu();
     }
+  };
+
+  const handleJoinClick = () => {
+    closeMenu();
+    openJoinModal();
   };
 
   useEffect(() => {
@@ -212,17 +219,10 @@ export default function Navbar() {
             <Link
               href="/"
               className={styles.brandingLink}
-              aria-label="UnBound X | AI-Powered Social Investing & Smart Finance App"
+              aria-label="UnBound X home"
               onClick={closeMenu}
             >
-              <Image
-                src="/brand-logo-new.svg"
-                alt="UnBound X"
-                width={160}
-                height={41}
-                className={styles.logo}
-                priority
-              />
+              <Logo className={styles.logo} />
             </Link>
           </div>
 
@@ -236,9 +236,13 @@ export default function Navbar() {
                 </li>
               ))}
               <li className={`${styles.navItem} ${styles.navButtonItem}`}>
-                <Link href="#join" className={styles.navButton}>
+                <button
+                  type="button"
+                  className={styles.navButton}
+                  onClick={openJoinModal}
+                >
                   Join Us
-                </Link>
+                </button>
               </li>
             </ul>
           </div>
@@ -281,15 +285,15 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
-          <Link
+          <button
             ref={mobileButtonRef}
-            href="#join"
+            type="button"
             className={styles.mobileNavButton}
-            onClick={closeMenu}
+            onClick={handleJoinClick}
             tabIndex={menuOpen ? 0 : -1}
           >
             Join Us
-          </Link>
+          </button>
         </nav>
       </div>
     </header>
