@@ -1,9 +1,14 @@
 "use client";
 
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import Logo from "./Logo";
+import { useEffect, useRef, useState } from "react";
 import { useJoinNow } from "./JoinNowProvider";
+import Logo from "./Logo";
+import styles from "./Navbar.module.css";
+
+gsap.registerPlugin(useGSAP);
 
 const NAV_LINKS = [
   { label: "Zenith A.I.", href: "#zenith" },
@@ -15,15 +20,31 @@ const NAV_LINKS = [
   { label: "Contact", href: "#contact" },
 ] as const;
 
-const joinButtonClass =
-  "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-[50px] border-2 border-navy bg-navy px-8 pb-[13px] pt-4 font-[inherit] text-[15px] font-semibold uppercase tracking-[0.02em] text-white transition-all duration-150 ease-linear hover:border-[#056bf0] hover:bg-blue focus-visible:border-[#056bf0] focus-visible:bg-blue";
+const MOBILE_BREAKPOINT = "(max-width: 1100px)";
 
 export default function Navbar() {
   const { openJoinModal } = useJoinNow();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuMounted, setMenuMounted] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
+  const mobileButtonRef = useRef<HTMLButtonElement>(null);
+  const hasAnimatedRef = useRef(false);
+
+  const openMenu = () => {
+    setMenuMounted(true);
+    setMenuOpen(true);
+  };
 
   const closeMenu = () => setMenuOpen(false);
-  const toggleMenu = () => setMenuOpen((open) => !open);
+  const toggleMenu = () => {
+    if (menuOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  };
 
   const handleJoinClick = () => {
     closeMenu();
@@ -31,11 +52,11 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    document.body.style.overflow = menuMounted ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuOpen]);
+  }, [menuMounted]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -47,41 +68,177 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [menuOpen]);
 
+  useGSAP(
+    () => {
+      const overlay = overlayRef.current;
+      const mobileNav = mobileNavRef.current;
+      const mobileButton = mobileButtonRef.current;
+
+      if (!overlay || !mobileNav) return;
+
+      const links = gsap.utils.toArray<HTMLElement>(
+        mobileNav.querySelectorAll(`.${styles.mobileNavLink}`)
+      );
+
+      const mm = gsap.matchMedia();
+
+      mm.add(
+        {
+          isMobile: MOBILE_BREAKPOINT,
+          reduceMotion: "(prefers-reduced-motion: reduce)",
+        },
+        (context) => {
+          const { isMobile, reduceMotion } = context.conditions as {
+            isMobile: boolean;
+            reduceMotion: boolean;
+          };
+
+          if (!isMobile) return;
+
+          gsap.killTweensOf([overlay, links, mobileButton]);
+
+          if (menuOpen) {
+            hasAnimatedRef.current = true;
+
+            if (reduceMotion) {
+              gsap.set(overlay, {
+                clipPath: "inset(0% 0% 0% 0%)",
+                visibility: "visible",
+                pointerEvents: "auto",
+              });
+              gsap.set([links, mobileButton], { y: 0, opacity: 1 });
+              return;
+            }
+
+            gsap.set(overlay, {
+              visibility: "visible",
+              pointerEvents: "auto",
+            });
+            gsap.set([links, mobileButton], { y: -28, opacity: 0 });
+
+            const tl = gsap.timeline();
+            tl.fromTo(
+              overlay,
+              { clipPath: "inset(0% 0% 100% 0%)" },
+              {
+                clipPath: "inset(0% 0% 0% 0%)",
+                duration: 0.5,
+                ease: "power3.out",
+              }
+            );
+            tl.to(
+              links,
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.4,
+                stagger: 0.05,
+                ease: "power2.out",
+              },
+              "-=0.28"
+            );
+            tl.to(
+              mobileButton,
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.35,
+                ease: "power2.out",
+              },
+              "-=0.22"
+            );
+          } else if (hasAnimatedRef.current) {
+            if (reduceMotion) {
+              gsap.set(overlay, {
+                clipPath: "inset(0% 0% 100% 0%)",
+                visibility: "hidden",
+                pointerEvents: "none",
+              });
+              gsap.set([links, mobileButton], { y: -28, opacity: 0 });
+              setMenuMounted(false);
+              return;
+            }
+
+            const tl = gsap.timeline({
+              onComplete: () => {
+                gsap.set(overlay, {
+                  visibility: "hidden",
+                  pointerEvents: "none",
+                });
+                setMenuMounted(false);
+              },
+            });
+
+            tl.to(links, {
+              y: -20,
+              opacity: 0,
+              duration: 0.22,
+              stagger: 0.03,
+              ease: "power2.in",
+            });
+            tl.to(
+              mobileButton,
+              {
+                y: -16,
+                opacity: 0,
+                duration: 0.2,
+                ease: "power2.in",
+              },
+              "-=0.12"
+            );
+            tl.to(
+              overlay,
+              {
+                clipPath: "inset(0% 0% 100% 0%)",
+                duration: 0.4,
+                ease: "power3.in",
+              },
+              "-=0.08"
+            );
+          }
+        }
+      );
+
+      return () => mm.revert();
+    },
+    { dependencies: [menuOpen], scope: headerRef, revertOnUpdate: true }
+  );
+
   return (
-    <header className="sticky top-0 z-[100] bg-white">
-      <div className="mx-auto w-full max-w-[1440px] p-5 max-[1100px]:p-5 min-[481px]:max-[1100px]:px-8 min-[481px]:max-[1100px]:py-7 min-[1101px]:p-10">
+    <header
+      ref={headerRef}
+      className={`${styles.header} ${menuMounted ? styles.headerOpen : ""}`}
+    >
+      <div className={styles.headerInner}>
         <nav
-          className="flex min-h-[67px] items-center gap-0 rounded-[50px] bg-nav-bg py-0 pl-[14px] pr-[7px] max-[1100px]:min-h-[62px] max-[1100px]:w-full max-[1100px]:justify-between max-[1100px]:py-[5px] max-[1100px]:pl-3 max-[1100px]:pr-[5px] min-[481px]:max-[1100px]:min-h-[67px] min-[481px]:max-[1100px]:py-[7px] min-[481px]:max-[1100px]:pl-4 min-[481px]:max-[1100px]:pr-[7px] max-[480px]:min-h-[62px] max-[480px]:pl-2.5"
+          className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}
           id="primary-nav"
           aria-label="Primary navigation"
         >
-          <div className="flex shrink-0 items-center max-[1100px]:pl-1">
+          <div className={styles.branding}>
             <Link
               href="/"
-              className="flex items-center no-underline"
+              className={styles.brandingLink}
               aria-label="UnBound X home"
               onClick={closeMenu}
             >
-              <Logo />
+              <Logo className={styles.logo} />
             </Link>
           </div>
 
-          <div className="min-w-0 flex-1 max-[1100px]:hidden">
-            <ul className="m-0 flex list-none items-center justify-end p-0">
+          <div className={styles.navWrapper}>
+            <ul className={styles.navList}>
               {NAV_LINKS.map(({ label, href }) => (
-                <li key={href} className="shrink-0">
-                  <Link
-                    href={href}
-                    className="block whitespace-nowrap px-[clamp(0.5rem,-0.8012rem+3.6145vw,1.85rem)] pb-3.5 pt-[18px] text-[15px] font-semibold uppercase tracking-[0.02em] text-navy no-underline transition-colors duration-150 ease-linear hover:text-blue focus-visible:text-blue"
-                  >
+                <li key={href} className={styles.navItem}>
+                  <Link href={href} className={styles.navLink}>
                     {label}
                   </Link>
                 </li>
               ))}
-              <li className="ml-[clamp(0.25rem,-0.4rem+1.5vw,0.75rem)] shrink-0">
+              <li className={`${styles.navItem} ${styles.navButtonItem}`}>
                 <button
                   type="button"
-                  className={joinButtonClass}
+                  className={styles.navButton}
                   onClick={openJoinModal}
                 >
                   Join Us
@@ -92,42 +249,34 @@ export default function Navbar() {
 
           <button
             type="button"
-            className="hidden size-12 shrink-0 cursor-pointer items-center justify-center rounded-full border-none bg-white p-0 text-navy max-[1100px]:flex max-[480px]:size-[46px]"
+            className={`${styles.navToggle} ${menuOpen ? styles.navToggleOpen : ""}`}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav-menu"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             onClick={toggleMenu}
           >
-            <span className="relative flex h-3.5 w-[18px] flex-col justify-between">
-              <span
-                className={`block h-0.5 w-full bg-current transition-all duration-150 ease-linear ${menuOpen ? "translate-y-[6px] rotate-45" : ""}`}
-              />
-              <span
-                className={`block h-0.5 w-full bg-current transition-all duration-150 ease-linear ${menuOpen ? "opacity-0" : ""}`}
-              />
-              <span
-                className={`block h-0.5 w-full bg-current transition-all duration-150 ease-linear ${menuOpen ? "-translate-y-[6px] -rotate-45" : ""}`}
-              />
-            </span>
+            <span className={styles.navToggleIcon} />
           </button>
         </nav>
       </div>
 
       <div
+        ref={overlayRef}
         id="mobile-nav-menu"
-        className={`fixed inset-0 top-[82px] z-[99] overflow-y-auto bg-white min-[1101px]:hidden ${menuOpen ? "flex flex-col" : "hidden"}`}
+        className={`${styles.mobileOverlay} ${menuMounted ? styles.mobileOverlayVisible : ""}`}
         aria-hidden={!menuOpen}
       >
         <nav
-          className="flex flex-1 flex-col items-center justify-center px-5 pb-12 pt-6"
+          ref={mobileNavRef}
+          className={styles.mobileNav}
           aria-label="Mobile navigation"
         >
-          <ul className="m-0 flex w-full list-none flex-col items-center p-0">
+          <ul className={styles.mobileNavList}>
             {NAV_LINKS.map(({ label, href }) => (
-              <li key={href} className="w-full text-center">
+              <li key={href} className={styles.mobileNavItem}>
                 <Link
                   href={href}
-                  className="block px-4 py-3 text-[15px] font-semibold uppercase tracking-[0.02em] text-navy no-underline transition-colors duration-150 ease-linear hover:text-blue focus-visible:text-blue min-[481px]:max-[1100px]:px-5 min-[481px]:max-[1100px]:py-3.5 min-[481px]:max-[1100px]:text-lg max-[480px]:px-4 max-[480px]:py-[11px]"
+                  className={styles.mobileNavLink}
                   onClick={closeMenu}
                   tabIndex={menuOpen ? 0 : -1}
                 >
@@ -137,8 +286,9 @@ export default function Navbar() {
             ))}
           </ul>
           <button
+            ref={mobileButtonRef}
             type="button"
-            className={`${joinButtonClass} mt-6 min-[481px]:max-[1100px]:mt-8 min-[481px]:max-[1100px]:px-12 min-[481px]:max-[1100px]:pb-[15px] min-[481px]:max-[1100px]:pt-[18px]`}
+            className={styles.mobileNavButton}
             onClick={handleJoinClick}
             tabIndex={menuOpen ? 0 : -1}
           >
