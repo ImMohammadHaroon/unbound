@@ -1,10 +1,35 @@
+:root {
+  --color-navy: #263040;
+  --color-blue: #066bf0;
+  --color-nav-bg: #ededea;
+  --color-white: #ffffff;
+  --color-grey: #6b7280;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   height: 100%;
+}
+
+body {
+  font-family: var(--font-figtree), "Figtree", sans-serif;
+  font-size: 16px;
+  color: var(--color-navy);
+  background-color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  transition: 150ms linear all;
 }
