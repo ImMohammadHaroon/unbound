@@ -1,15 +1,26 @@
 import type { Metadata } from "next";
+import { Figtree } from "next/font/google";
 import "./globals.css";
 
+const figtree = Figtree({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-figtree",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Unbound",
-  description: "Unbound app",
+  title: "UnBound X | AI-Powered Social Investing & Smart Finance App",
+  description:
+    "Join a vibrant community where AI-powered insights, social portfolios, and a full spectrum of investment opportunities meet—all in one seamless experience.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>{children}</body>
+      <body className={figtree.variable} suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
