@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
 import styles from "./Hero.module.css";
 
 const ROTATING_WORDS = ["learn", "invest", "together."] as const;
@@ -16,20 +15,6 @@ type HeroProps = {
 };
 
 export default function Hero({ heroImageRef }: HeroProps) {
-  const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
-
-  useEffect(() => {
-    const timeouts = ROTATING_WORDS.map((_, index) =>
-      window.setTimeout(() => {
-        wordRefs.current[index]?.classList.add(styles.animate);
-      }, 500 + 1000 * index)
-    );
-
-    return () => {
-      timeouts.forEach((timeout) => window.clearTimeout(timeout));
-    };
-  }, []);
-
   return (
     <section className={styles.homeHero} data-hero-section>
       <div className={styles.wrapper}>
@@ -38,14 +23,8 @@ export default function Hero({ heroImageRef }: HeroProps) {
           <br />
           of finance,{" "}
           <span className={styles.curtainWords}>
-            {ROTATING_WORDS.map((word, index) => (
-              <span
-                key={word}
-                ref={(element) => {
-                  wordRefs.current[index] = element;
-                }}
-                className={styles.curtainWord}
-              >
+            {ROTATING_WORDS.map((word) => (
+              <span key={word} className={styles.curtainWord} data-curtain-word>
                 {word}
               </span>
             ))}
