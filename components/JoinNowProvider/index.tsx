@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import JoinNowModal from "./JoinNowModal";
+import JoinNowModal from "@/components/JoinNowModal";
 
 type JoinNowContextValue = {
   openJoinModal: () => void;
