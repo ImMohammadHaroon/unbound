@@ -11,7 +11,11 @@ const HERO_VIDEO = "/hero-video.mp4";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-export default function StickyHeroSection() {
+type StickyHeroSectionProps = {
+  children?: React.ReactNode;
+};
+
+export default function StickyHeroSection({ children }: StickyHeroSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const curtainRef = useRef<HTMLDivElement>(null);
@@ -21,6 +25,24 @@ export default function StickyHeroSection() {
 
   useEffect(() => {
     setCanPlayVideo(true);
+  }, []);
+
+  useEffect(() => {
+    const words =
+      containerRef.current?.querySelectorAll<HTMLElement>("[data-curtain-word]");
+    const timeouts: number[] = [];
+
+    words?.forEach((word, index) => {
+      timeouts.push(
+        window.setTimeout(() => {
+          word.setAttribute("data-animate", "");
+        }, 500 + 1000 * index)
+      );
+    });
+
+    return () => {
+      timeouts.forEach((timeout) => window.clearTimeout(timeout));
+    };
   }, []);
 
   useEffect(() => {
@@ -64,8 +86,6 @@ export default function StickyHeroSection() {
 
   useGSAP(
     () => {
-      curtainRef.current?.classList.add(styles.curtainAnimate);
-
       const heroSection = containerRef.current?.querySelector(
         "[data-hero-section]"
       );
@@ -124,7 +144,11 @@ export default function StickyHeroSection() {
       </div>
 
       <div className={styles.sectionAfterSticky}>
-        <div className={styles.mediaLarge}>
+        <div
+          className={styles.mediaLarge}
+          data-sal="slide-up"
+          data-sal-duration="1000"
+        >
           <div className={styles.mediaLargeVideo}>
             {canPlayVideo ? (
               <video
@@ -152,6 +176,7 @@ export default function StickyHeroSection() {
             </div>
           </div>
         </div>
+        {children}
       </div>
     </div>
   );

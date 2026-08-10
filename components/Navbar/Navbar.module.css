@@ -9,7 +9,7 @@
 .headerHomeIntro {
   opacity: 0;
   animation: headerFadeIn 1.5s ease-in-out forwards;
-  animation-delay: 3.5s;
+  animation-delay: 0.5s;
 }
 
 .headerHomeIntro.headerFixed {

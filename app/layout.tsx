@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
+import SalInit from "@/components/SalInit";
 import "./globals.css";
+import "@/styles/sal.css";
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -19,6 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={figtree.variable} suppressHydrationWarning>
+        <SalInit />
         {children}
       </body>
     </html>

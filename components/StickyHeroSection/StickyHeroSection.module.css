@@ -16,20 +16,7 @@
 }
 
 .curtain {
-  pointer-events: none;
-  position: fixed;
-  z-index: 200;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  backface-visibility: hidden;
-  background-color: #ffffff;
-}
-
-.curtainAnimate {
-  animation: curtainFadeOut 0.5s ease-in-out forwards;
-  animation-delay: 3s;
+  display: none;
 }
 
 .mediaLarge {
