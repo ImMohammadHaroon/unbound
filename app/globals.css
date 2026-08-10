@@ -50,6 +50,10 @@
     @apply font-sans text-base text-navy bg-white antialiased;
   }
 
+  body.nav-expanded {
+    overflow: hidden;
+  }
+
   a {
     @apply transition-all duration-150 ease-linear;
   }
