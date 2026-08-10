@@ -43,10 +43,10 @@
 
 .image {
   order: -1;
-  flex-shrink: 0;
 }
 
-.image img {
+.image img,
+.imageElement {
   display: block;
   width: auto;
   max-width: 100%;
@@ -73,9 +73,25 @@
 
   .image {
     order: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   .section:nth-of-type(2) .image {
     order: 1;
+    justify-content: flex-end;
+  }
+
+  .image img,
+  .imageElement {
+    max-width: min(100%, 360px);
+  }
+}
+
+@media (max-width: 399px) {
+  .image img,
+  .imageElement {
+    max-width: 100%;
   }
 }
