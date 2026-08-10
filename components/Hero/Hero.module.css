@@ -3,6 +3,7 @@
   place-content: center;
   min-height: 99vh;
   padding-top: calc(clamp(2.5rem, -1.8373rem + 12.0482vi, 7.5rem) * 2);
+  transition: height 1000s steps(1);
 }
 
 @media (max-width: 575px) {
@@ -22,13 +23,15 @@
 
 .heading {
   position: relative;
-  z-index: 1;
+  z-index: 1000;
   font-size: clamp(3rem, -0.9036rem + 10.8434vi, 6.5rem);
   font-weight: 700;
   line-height: 0.89;
-  color: var(--color-navy);
+  color: #ffffff;
   text-align: center;
   backface-visibility: hidden;
+  animation: colorIn 0.5s ease-in-out forwards;
+  animation-delay: 3.1s;
 }
 
 @media (max-width: 767px) {
@@ -69,6 +72,7 @@
 }
 
 .sectionCenter {
+  width: 100%;
   max-width: 731px;
   text-align: center;
 }
@@ -106,11 +110,23 @@
 }
 
 .heroImage img {
+  display: block;
   width: 100%;
   max-width: 506px;
   height: auto;
   margin-inline: auto;
   animation: float 8s ease-in-out infinite;
+}
+
+@keyframes colorIn {
+  0% {
+    color: #ffffff;
+    z-index: 1000;
+  }
+  100% {
+    color: var(--color-navy);
+    z-index: 1;
+  }
 }
 
 @keyframes fadeInOut {
@@ -153,8 +169,42 @@
 }
 
 @media (max-width: 639px) {
+  .downloadButtons {
+    gap: 10px;
+    margin: 8px 0;
+  }
+
   .downloadButtons img {
     width: 140px;
     height: auto;
+  }
+
+  .inner {
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 575px) {
+  .heading {
+    font-size: 36px;
+    padding-inline: 0.25rem;
+  }
+
+  .description {
+    padding-inline: 0.25rem;
+  }
+
+  .heroImage img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 399px) {
+  .heading {
+    font-size: 32px;
+  }
+
+  .downloadButtons img {
+    width: 124px;
   }
 }
