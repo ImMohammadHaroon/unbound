@@ -1,16 +1,12 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./Navbar.module.css";
 
-gsap.registerPlugin(useGSAP);
-
 const NAV_LINKS = [
-  { label: "Zenith A.I.", href: "#zenith" },
+  { label: "Zenith A.I.", href: "#tools" },
   { label: "Users", href: "#users" },
   { label: "Creators", href: "#creators" },
   { label: "UBverse", href: "#ubverse" },
@@ -19,37 +15,67 @@ const NAV_LINKS = [
   { label: "Contact", href: "#contact" },
 ] as const;
 
-const MOBILE_BREAKPOINT = "(max-width: 1100px)";
+const JOIN_HREF = "#join-popup";
+const SCROLL_OFFSET = 100;
+
+function smoothScrollTo(targetY: number, duration = 1000) {
+  const startY = window.scrollY;
+  const distance = targetY - startY - SCROLL_OFFSET;
+  let startTime: number | null = null;
+
+  const easeInOutQuint = (t: number) =>
+    t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2;
+
+  const step = (timestamp: number) => {
+    if (!startTime) startTime = timestamp;
+    const elapsed = timestamp - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    window.scrollTo(0, startY + distance * easeInOutQuint(progress));
+    if (elapsed < duration) requestAnimationFrame(step);
+  };
+
+  requestAnimationFrame(step);
+}
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [menuMounted, setMenuMounted] = useState(false);
+  const [isFixed, setIsFixed] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const mobileNavRef = useRef<HTMLElement>(null);
-  const mobileButtonRef = useRef<HTMLAnchorElement>(null);
-  const hasAnimatedRef = useRef(false);
 
-  const openMenu = () => {
-    setMenuMounted(true);
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    document.body.classList.remove("body-nav-expanded");
+  }, []);
+
+  const openMenu = useCallback(() => {
     setMenuOpen(true);
-  };
+    document.body.classList.add("body-nav-expanded");
+  }, []);
 
-  const closeMenu = () => setMenuOpen(false);
-  const toggleMenu = () => {
+  const toggleMenu = useCallback(() => {
     if (menuOpen) {
       closeMenu();
     } else {
       openMenu();
     }
-  };
+  }, [menuOpen, closeMenu, openMenu]);
 
   useEffect(() => {
-    document.body.style.overflow = menuMounted ? "hidden" : "";
+    const onScroll = () => {
+      setIsFixed(window.scrollY > 0);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuMounted]);
+  }, [menuOpen]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -59,237 +85,105 @@ export default function Navbar() {
       window.addEventListener("keydown", onKeyDown);
     }
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [menuOpen]);
+  }, [menuOpen, closeMenu]);
 
-  useGSAP(
-    () => {
-      const overlay = overlayRef.current;
-      const mobileNav = mobileNavRef.current;
-      const mobileButton = mobileButtonRef.current;
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    if (!href.startsWith("#") || href.length <= 1) return;
 
-      if (!overlay || !mobileNav) return;
+    e.preventDefault();
+    closeMenu();
 
-      const links = gsap.utils.toArray<HTMLElement>(
-        mobileNav.querySelectorAll(`.${styles.mobileNavLink}`)
-      );
+    if (href === JOIN_HREF) {
+      const popup = document.getElementById("join-popup");
+      if (popup) {
+        popup.classList.add("is-open");
+        document.body.classList.add("has-popup-open");
+      }
+      return;
+    }
 
-      const mm = gsap.matchMedia();
-
-      mm.add(
-        {
-          isMobile: MOBILE_BREAKPOINT,
-          reduceMotion: "(prefers-reduced-motion: reduce)",
-        },
-        (context) => {
-          const { isMobile, reduceMotion } = context.conditions as {
-            isMobile: boolean;
-            reduceMotion: boolean;
-          };
-
-          if (!isMobile) return;
-
-          gsap.killTweensOf([overlay, links, mobileButton]);
-
-          if (menuOpen) {
-            hasAnimatedRef.current = true;
-
-            if (reduceMotion) {
-              gsap.set(overlay, {
-                clipPath: "inset(0% 0% 0% 0%)",
-                visibility: "visible",
-                pointerEvents: "auto",
-              });
-              gsap.set([links, mobileButton], { y: 0, opacity: 1 });
-              return;
-            }
-
-            gsap.set(overlay, {
-              visibility: "visible",
-              pointerEvents: "auto",
-            });
-            gsap.set([links, mobileButton], { y: -28, opacity: 0 });
-
-            const tl = gsap.timeline();
-            tl.fromTo(
-              overlay,
-              { clipPath: "inset(0% 0% 100% 0%)" },
-              {
-                clipPath: "inset(0% 0% 0% 0%)",
-                duration: 0.5,
-                ease: "power3.out",
-              }
-            );
-            tl.to(
-              links,
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.4,
-                stagger: 0.05,
-                ease: "power2.out",
-              },
-              "-=0.28"
-            );
-            tl.to(
-              mobileButton,
-              {
-                y: 0,
-                opacity: 1,
-                duration: 0.35,
-                ease: "power2.out",
-              },
-              "-=0.22"
-            );
-          } else if (hasAnimatedRef.current) {
-            if (reduceMotion) {
-              gsap.set(overlay, {
-                clipPath: "inset(0% 0% 100% 0%)",
-                visibility: "hidden",
-                pointerEvents: "none",
-              });
-              gsap.set([links, mobileButton], { y: -28, opacity: 0 });
-              setMenuMounted(false);
-              return;
-            }
-
-            const tl = gsap.timeline({
-              onComplete: () => {
-                gsap.set(overlay, {
-                  visibility: "hidden",
-                  pointerEvents: "none",
-                });
-                setMenuMounted(false);
-              },
-            });
-
-            tl.to(links, {
-              y: -20,
-              opacity: 0,
-              duration: 0.22,
-              stagger: 0.03,
-              ease: "power2.in",
-            });
-            tl.to(
-              mobileButton,
-              {
-                y: -16,
-                opacity: 0,
-                duration: 0.2,
-                ease: "power2.in",
-              },
-              "-=0.12"
-            );
-            tl.to(
-              overlay,
-              {
-                clipPath: "inset(0% 0% 100% 0%)",
-                duration: 0.4,
-                ease: "power3.in",
-              },
-              "-=0.08"
-            );
-          }
-        }
-      );
-
-      return () => mm.revert();
-    },
-    { dependencies: [menuOpen], scope: headerRef, revertOnUpdate: true }
-  );
+    const target = document.querySelector(href);
+    if (target) {
+      const top = target.getBoundingClientRect().top + window.scrollY;
+      smoothScrollTo(top);
+    }
+  };
 
   return (
     <header
       ref={headerRef}
-      className={`${styles.header} ${menuMounted ? styles.headerOpen : ""}`}
+      id="JS-site-header"
+      className={`${styles.header} ${isFixed ? styles.headerFixed : ""}`}
     >
       <div className={styles.headerInner}>
         <nav
-          className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}
-          id="primary-nav"
+          id="JS-primary-nav"
+          className={`${styles.nav} ${menuOpen ? styles.navVisible : ""}`}
           aria-label="Primary navigation"
         >
+          <button
+            type="button"
+            className={`${styles.navToggle} ${menuOpen ? styles.navToggleExpanded : ""}`}
+            aria-controls="JS-primary-nav"
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={toggleMenu}
+          >
+            <span />
+          </button>
+
           <div className={styles.branding}>
             <Link
               href="/"
-              className={styles.brandingLink}
+              className={styles.brandingImage}
               aria-label="UnBound X | AI-Powered Social Investing & Smart Finance App"
               onClick={closeMenu}
             >
               <Image
                 src="/brand-logo-new.svg"
-                alt="UnBound X"
-                width={160}
-                height={41}
+                alt="UnBound X | AI-Powered Social Investing & Smart Finance App"
+                width={180}
+                height={53}
                 className={styles.logo}
                 priority
               />
             </Link>
+            <h1 className={styles.screenReaderText}>
+              <Link href="/">
+                UnBound X | AI-Powered Social Investing & Smart Finance App
+              </Link>
+            </h1>
           </div>
 
-          <div className={styles.navWrapper}>
+          <div
+            className={`${styles.navWrapper} ${menuOpen ? styles.navWrapperVisible : ""}`}
+          >
             <ul className={styles.navList}>
               {NAV_LINKS.map(({ label, href }) => (
                 <li key={href} className={styles.navItem}>
-                  <Link href={href} className={styles.navLink}>
+                  <Link
+                    href={href}
+                    className={styles.navLink}
+                    onClick={(e) => handleNavClick(e, href)}
+                  >
                     {label}
                   </Link>
                 </li>
               ))}
               <li className={`${styles.navItem} ${styles.navButtonItem}`}>
-                <Link href="#join" className={styles.navButton}>
+                <Link
+                  href={JOIN_HREF}
+                  className={`${styles.navLink} ${styles.navButton}`}
+                  onClick={(e) => handleNavClick(e, JOIN_HREF)}
+                >
                   Join Us
                 </Link>
               </li>
             </ul>
           </div>
-
-          <button
-            type="button"
-            className={`${styles.navToggle} ${menuOpen ? styles.navToggleOpen : ""}`}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-nav-menu"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            onClick={toggleMenu}
-          >
-            <span className={styles.navToggleIcon} />
-          </button>
-        </nav>
-      </div>
-
-      <div
-        ref={overlayRef}
-        id="mobile-nav-menu"
-        className={`${styles.mobileOverlay} ${menuMounted ? styles.mobileOverlayVisible : ""}`}
-        aria-hidden={!menuOpen}
-      >
-        <nav
-          ref={mobileNavRef}
-          className={styles.mobileNav}
-          aria-label="Mobile navigation"
-        >
-          <ul className={styles.mobileNavList}>
-            {NAV_LINKS.map(({ label, href }) => (
-              <li key={href} className={styles.mobileNavItem}>
-                <Link
-                  href={href}
-                  className={styles.mobileNavLink}
-                  onClick={closeMenu}
-                  tabIndex={menuOpen ? 0 : -1}
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Link
-            ref={mobileButtonRef}
-            href="#join"
-            className={styles.mobileNavButton}
-            onClick={closeMenu}
-            tabIndex={menuOpen ? 0 : -1}
-          >
-            Join Us
-          </Link>
         </nav>
       </div>
     </header>
