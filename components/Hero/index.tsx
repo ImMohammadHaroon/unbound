@@ -11,7 +11,11 @@ const APP_STORE_URL =
 const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.unboundx";
 
-export default function Hero() {
+type HeroProps = {
+  heroImageRef?: React.RefObject<HTMLDivElement | null>;
+};
+
+export default function Hero({ heroImageRef }: HeroProps) {
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
@@ -27,7 +31,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className={styles.homeHero}>
+    <section className={styles.homeHero} data-hero-section>
       <div className={styles.wrapper}>
         <h2 className={styles.heading}>
           Shaping the future
@@ -79,7 +83,7 @@ export default function Hero() {
               </a>
             </div>
 
-            <div className={styles.heroImage}>
+            <div className={styles.heroImage} ref={heroImageRef}>
               <Image
                 src="/intro-image-1.webp"
                 alt=""

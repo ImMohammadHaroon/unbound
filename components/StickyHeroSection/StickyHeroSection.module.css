@@ -1,0 +1,153 @@
+.sectionSticky {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  border-radius: clamp(1.5rem, 1.0663rem + 1.2048vi, 2rem);
+}
+
+.sectionStickyFirst {
+  top: 0 !important;
+}
+
+.sectionAfterSticky {
+  position: relative;
+  z-index: 11;
+  background-color: #ffffff;
+}
+
+.curtain {
+  pointer-events: none;
+  position: fixed;
+  z-index: 200;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backface-visibility: hidden;
+  background-color: #ffffff;
+}
+
+.curtainAnimate {
+  animation: curtainFadeOut 0.5s ease-in-out forwards;
+  animation-delay: 3s;
+}
+
+.mediaLarge {
+  position: relative;
+  width: min(1440px, 100%);
+  height: 100svh;
+  max-height: 620px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 0.1657rem + 3.012vi, 2.5rem);
+}
+
+.mediaLargeVideo {
+  width: 100%;
+  height: 100%;
+  border-radius: clamp(1.5rem, 1.0663rem + 1.2048vi, 2rem);
+  overflow: hidden;
+}
+
+.mediaLargeVideoElement {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.mediaLargeText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  gap: clamp(0.75rem, 0.5rem + 0.8vi, 1.25rem);
+  width: 100%;
+  height: 100%;
+  padding-inline: calc(clamp(1.25rem, 0.1657rem + 3.012vi, 2.5rem) * 2);
+}
+
+.mediaLargeText p {
+  margin: 0;
+  font-size: clamp(2.5rem, -0.9036rem + 10.8434vi, 5.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  color: #ffffff;
+  text-align: center;
+}
+
+.taglineText {
+  max-width: 600px;
+  margin: auto;
+  color: #ffffff;
+  text-align: center;
+  font-size: clamp(0.875rem, 0.75rem + 0.6vi, 1.25rem);
+  line-height: 1.5;
+}
+
+@media (max-width: 767px) {
+  .mediaLarge {
+    max-height: 480px;
+  }
+
+  .mediaLargeText {
+    padding-inline: clamp(1.25rem, 0.1657rem + 3.012vi, 2.5rem);
+  }
+
+  .mediaLargeText p {
+    font-size: clamp(2rem, 1.2rem + 4.5vi, 3.5rem);
+  }
+}
+
+@media (max-width: 575px) {
+  .sectionSticky {
+    border-radius: clamp(1rem, 0.8rem + 0.8vi, 1.5rem);
+  }
+
+  .mediaLarge {
+    max-height: 420px;
+    min-height: 300px;
+    padding-inline: clamp(1rem, 0.5rem + 2vi, 1.25rem);
+  }
+
+  .mediaLargeVideo {
+    border-radius: clamp(1rem, 0.8rem + 0.8vi, 1.5rem);
+  }
+
+  .mediaLargeText p {
+    font-size: clamp(1.75rem, 1.25rem + 3vi, 2.5rem);
+  }
+
+  .taglineText {
+    max-width: 100%;
+    padding-inline: 0.5rem;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 399px) {
+  .mediaLarge {
+    max-height: 360px;
+    min-height: 260px;
+  }
+
+  .mediaLargeText p {
+    font-size: 1.625rem;
+  }
+
+  .taglineText {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+}
+
+@keyframes curtainFadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

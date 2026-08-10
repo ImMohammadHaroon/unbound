@@ -178,6 +178,10 @@ body.has-popup-open {
   text-decoration: none;
 }
 
+button.m-close-btn {
+  border: 0;
+}
+
 .m-close-btn {
   color: #263040;
   position: absolute;
@@ -185,6 +189,9 @@ body.has-popup-open {
   top: 20px;
   background-color: #fff;
   border: none;
+  outline: none;
+  box-shadow: none;
+  appearance: none;
   border-radius: 8px;
   min-height: 24px;
   min-width: 60px;
@@ -200,6 +207,13 @@ body.has-popup-open {
   letter-spacing: normal;
   line-height: normal;
   display: flex;
+}
+
+.m-close-btn:focus,
+.m-close-btn:focus-visible {
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
 @media (max-width: 991px) {

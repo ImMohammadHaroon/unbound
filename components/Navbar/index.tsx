@@ -16,11 +16,21 @@ const NAV_LINKS = [
   { label: "Contact", href: "#contact" },
 ] as const;
 
-export default function Navbar() {
+type NavbarProps = {
+  homeIntro?: boolean;
+};
+
+export default function Navbar({ homeIntro = false }: NavbarProps) {
   const { openJoinModal } = useJoinNow();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
+  const [introRevealed, setIntroRevealed] = useState(!homeIntro);
+  const [hasMounted, setHasMounted] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -69,6 +79,32 @@ export default function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => {
+    if (!homeIntro) return;
+
+    const revealTimer = window.setTimeout(() => {
+      setIntroRevealed(true);
+    }, 5000);
+
+    const onScroll = () => {
+      const scrolled = window.scrollY > 0;
+      setIsFixed(scrolled);
+      if (scrolled) {
+        setIntroRevealed(true);
+      }
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.clearTimeout(revealTimer);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [homeIntro]);
+
+  useEffect(() => {
+    if (homeIntro) return;
+
     const onScroll = () => {
       setIsFixed(window.scrollY > 0);
     };
@@ -76,13 +112,22 @@ export default function Navbar() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [homeIntro]);
+
+  const showHomeIntro = homeIntro && !introRevealed;
+  const headerClassName = [
+    styles.header,
+    hasMounted && isFixed && styles.headerFixed,
+    showHomeIntro && styles.headerHomeIntro,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <header
       ref={headerRef}
       id="JS-site-header"
-      className={`${styles.header} ${isFixed ? styles.headerFixed : ""}`}
+      className={headerClassName}
     >
       <div className={styles.headerInner}>
         <nav
