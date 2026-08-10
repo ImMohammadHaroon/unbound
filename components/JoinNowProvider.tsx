@@ -26,7 +26,7 @@ export function useJoinNow() {
   return context;
 }
 
-const AUTO_OPEN_DELAY_MS = 5000;
+const AUTO_OPEN_DELAY_MS = 10000;
 
 export default function JoinNowProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
