@@ -55,7 +55,8 @@ export default function TextBlocks() {
               alt=""
               width={block.width}
               height={block.height}
-              sizes="(max-width: 639px) 100vw, 50vw"
+              sizes="(max-width: 639px) 90vw, (max-width: 959px) 45vw, 500px"
+              className={styles.imageElement}
             />
           </div>
         </div>

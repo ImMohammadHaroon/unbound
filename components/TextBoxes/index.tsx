@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { useEffect, useRef } from "react";
+import Swiper from "swiper";
 import "swiper/css";
-import styles from "./TextBoxes.module.css";
+import "./text-boxes.css";
 
 const BOXES = [
   {
@@ -24,74 +24,68 @@ const BOXES = [
   },
 ] as const;
 
-function BoxCard({
-  icon,
-  title,
-  text,
-}: {
-  icon: string;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className={styles.box}>
-      <div className={styles.icon}>
-        <Image src={icon} alt="" width={47} height={47} />
-      </div>
-      <p className={styles.title}>{title}</p>
-      <p className={styles.text}>{text}</p>
-    </div>
-  );
-}
-
 export default function TextBoxes() {
-  const [isMobile, setIsMobile] = useState(false);
+  const swiperRef = useRef<HTMLDivElement>(null);
+  const swiperInstance = useRef<Swiper | null>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 575px)");
-    const update = () => setIsMobile(mediaQuery.matches);
 
-    update();
-    mediaQuery.addEventListener("change", update);
+    const syncSwiper = () => {
+      const container = swiperRef.current;
 
-    return () => mediaQuery.removeEventListener("change", update);
+      if (mediaQuery.matches && container && !swiperInstance.current) {
+        swiperInstance.current = new Swiper(container, {
+          loop: false,
+          centeredSlides: false,
+          centerInsufficientSlides: false,
+          slidesPerView: 1.25,
+          spaceBetween: 20,
+        });
+        return;
+      }
+
+      if (!mediaQuery.matches && swiperInstance.current) {
+        swiperInstance.current.destroy(true, true);
+        swiperInstance.current = null;
+      }
+    };
+
+    syncSwiper();
+    mediaQuery.addEventListener("change", syncSwiper);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncSwiper);
+      swiperInstance.current?.destroy(true, true);
+      swiperInstance.current = null;
+    };
   }, []);
 
   return (
     <section
-      className={styles.textBoxes}
+      className="text-boxes"
       data-sal="slide-up"
       data-sal-duration="1000"
     >
-      <div className={styles.swiperContainer}>
-        <p className={styles.tagline}>
+      <div ref={swiperRef} className="swiper">
+        <p className="textboxes-tagline">
           For educational purposes only. No investment advice or brokerage
           services are provided by UnBound X.
         </p>
 
-        {isMobile ? (
-          <Swiper
-            className={styles.swiper}
-            slidesPerView={1.25}
-            spaceBetween={20}
-            loop={false}
-            centeredSlides={false}
-          >
-            {BOXES.map((box) => (
-              <SwiperSlide key={box.title} className={styles.slide}>
-                <BoxCard {...box} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        ) : (
-          <div className={styles.swiperWrapper}>
-            {BOXES.map((box) => (
-              <div key={box.title} className={styles.slide}>
-                <BoxCard {...box} />
+        <div className="swiper-wrapper">
+          {BOXES.map((box) => (
+            <div key={box.title} className="swiper-slide">
+              <div className="text-boxes__box">
+                <div className="text-boxes__box__icon">
+                  <Image src={box.icon} alt="" width={47} height={47} />
+                </div>
+                <p className="text-boxes__box__title">{box.title}</p>
+                <p className="text-boxes__box__text">{box.text}</p>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
