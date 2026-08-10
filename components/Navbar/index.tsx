@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useJoinNow } from "./JoinNowProvider";
-import Logo from "./Logo";
+import { useJoinNow } from "@/components/JoinNowProvider";
+import Logo from "@/components/Logo";
 import styles from "./Navbar.module.css";
 
 const NAV_LINKS = [

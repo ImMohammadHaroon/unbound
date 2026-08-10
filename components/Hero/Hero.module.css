@@ -1,0 +1,160 @@
+.homeHero {
+  display: grid;
+  place-content: center;
+  min-height: 99vh;
+  padding-top: calc(clamp(2.5rem, -1.8373rem + 12.0482vi, 7.5rem) * 2);
+}
+
+@media (max-width: 575px) {
+  .homeHero {
+    height: auto;
+    min-height: unset;
+    padding-block: calc(clamp(2.5rem, -1.8373rem + 12.0482vi, 7.5rem) + 100px)
+      clamp(2.5rem, -1.8373rem + 12.0482vi, 7.5rem);
+  }
+}
+
+.wrapper {
+  width: min(1440px, 100%);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 0.1657rem + 3.012vi, 2.5rem);
+}
+
+.heading {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(3rem, -0.9036rem + 10.8434vi, 6.5rem);
+  font-weight: 700;
+  line-height: 0.89;
+  color: var(--color-navy);
+  text-align: center;
+  backface-visibility: hidden;
+}
+
+@media (max-width: 767px) {
+  .heading {
+    line-height: 1;
+    font-size: 42px;
+  }
+}
+
+.curtainWords {
+  display: inline-grid;
+  color: var(--color-blue);
+}
+
+.curtainWord {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  backface-visibility: hidden;
+  opacity: 0;
+}
+
+.curtainWord.animate:nth-of-type(1) {
+  animation: fadeInOut 1s ease-in-out forwards;
+}
+
+.curtainWord.animate:nth-of-type(2) {
+  animation: fadeInOut 1s ease-in-out forwards;
+}
+
+.curtainWord.animate:nth-of-type(3) {
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.inner {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.sectionCenter {
+  max-width: 731px;
+  text-align: center;
+}
+
+.description {
+  max-width: 731px;
+  margin-inline: auto;
+  font-size: clamp(1rem, 0.8916rem + 0.3012vi, 1.125rem);
+  font-weight: 500;
+  color: #676e79;
+  text-align: center;
+}
+
+.downloadButtons {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 18px;
+  margin: 16px 0;
+}
+
+.downloadButtons a {
+  display: block;
+  line-height: 0;
+}
+
+.downloadButtons img {
+  width: 162px;
+  height: 48px;
+}
+
+.heroImage {
+  position: relative;
+  z-index: -1;
+}
+
+.heroImage img {
+  width: 100%;
+  max-width: 506px;
+  height: auto;
+  margin-inline: auto;
+  animation: float 8s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(-20px);
+  }
+  50% {
+    transform: translateY(20px);
+  }
+  100% {
+    transform: translateY(-20px);
+  }
+}
+
+@media (max-width: 639px) {
+  .downloadButtons img {
+    width: 140px;
+    height: auto;
+  }
+}

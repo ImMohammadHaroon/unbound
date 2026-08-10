@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import "../styles/join-popup.css";
+import "@/styles/join-popup.css";
 
 const APP_STORE_URL =
   "https://apps.apple.com/us/app/unbound-x/id6745837250";
