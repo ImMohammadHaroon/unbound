@@ -9,6 +9,7 @@ import StickySectionsInit from "@/components/StickySectionsInit";
 import TextBlocks from "@/components/TextBlocks";
 import TextBoxes from "@/components/TextBoxes";
 import Tools from "@/components/Tools";
+import UBverse from "@/components/UBverse";
 import Users from "@/components/Users";
 import styles from "./page.module.css";
 
@@ -29,6 +30,7 @@ export default function Home() {
             <Users />
             <Creators />
           </SectionGradient>
+          <UBverse />
           <StickySectionsInit />
         </main>
       </div>
