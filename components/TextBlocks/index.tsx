@@ -10,6 +10,7 @@ const BLOCKS = [
     image: "/img-01.png",
     width: 890,
     height: 848,
+    sizes: "(max-width: 890px) 100vw, 890px",
   },
   {
     heading: (
@@ -23,6 +24,7 @@ const BLOCKS = [
     image: "/img-02.png",
     width: 990,
     height: 928,
+    sizes: "(max-width: 990px) 100vw, 990px",
   },
   {
     heading: "Empowering Investors: Your Voice, Our Future",
@@ -30,6 +32,7 @@ const BLOCKS = [
     image: "/img-03.png",
     width: 946,
     height: 824,
+    sizes: "(max-width: 946px) 100vw, 946px",
   },
 ] as const;
 
@@ -55,7 +58,7 @@ export default function TextBlocks() {
               alt=""
               width={block.width}
               height={block.height}
-              sizes="(max-width: 639px) 90vw, (max-width: 959px) 45vw, 500px"
+              sizes={block.sizes}
               className={styles.imageElement}
             />
           </div>
