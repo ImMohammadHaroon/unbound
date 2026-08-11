@@ -6,6 +6,7 @@
   top: 0 !important;
   padding: 0 !important;
   border-radius: clamp(1.5rem, 1.0663rem + 1.2048vi, 2rem);
+  transform: translateZ(0);
 }
 
 .security__inner {

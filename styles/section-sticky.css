@@ -1,0 +1,22 @@
+/* Sticky sections — global classes match template app.css */
+
+.section-sticky {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  border-radius: clamp(1.5rem, 1.0663rem + 1.2048vi, 2rem);
+}
+
+.section-sticky--first {
+  top: 0 !important;
+}
+
+.section-sticky-12 {
+  z-index: 12;
+}
+
+.section-after-sticky {
+  position: relative;
+  z-index: 11;
+  background-color: #ffffff;
+}
