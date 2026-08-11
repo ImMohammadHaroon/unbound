@@ -5,6 +5,7 @@ import Quotes from "@/components/Quotes";
 import SectionGradient from "@/components/SectionGradient";
 import Security from "@/components/Security";
 import StickyHeroSection from "@/components/StickyHeroSection";
+import StickySectionsInit from "@/components/StickySectionsInit";
 import TextBlocks from "@/components/TextBlocks";
 import TextBoxes from "@/components/TextBoxes";
 import Tools from "@/components/Tools";
@@ -28,6 +29,7 @@ export default function Home() {
             <Users />
             <JoinCommunity />
           </SectionGradient>
+          <StickySectionsInit />
         </main>
       </div>
     </JoinNowProvider>

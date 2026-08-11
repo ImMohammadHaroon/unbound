@@ -3,6 +3,7 @@ import { Figtree } from "next/font/google";
 import SalInit from "@/components/SalInit";
 import "./globals.css";
 import "@/styles/sal.css";
+import "@/styles/section-sticky.css";
 
 const figtree = Figtree({
   subsets: ["latin"],

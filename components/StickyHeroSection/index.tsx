@@ -92,17 +92,6 @@ export default function StickyHeroSection({ children }: StickyHeroSectionProps) 
 
       ScrollTrigger.matchMedia({
         "(min-width: 576px)": () => {
-          if (stickyRef.current) {
-            ScrollTrigger.create({
-              trigger: stickyRef.current,
-              start: "top top",
-              pin: true,
-              pinSpacing: false,
-              anticipatePin: 1,
-              scrub: 1,
-            });
-          }
-
           if (heroSection && heroImageRef.current) {
             gsap.to(heroImageRef.current, {
               y: -150,
@@ -137,7 +126,7 @@ export default function StickyHeroSection({ children }: StickyHeroSectionProps) 
     <div ref={containerRef}>
       <div
         ref={stickyRef}
-        className={`${styles.sectionSticky} ${styles.sectionStickyFirst}`}
+        className={`${styles.sectionSticky} ${styles.sectionStickyFirst} JS-sticky-section`}
       >
         <div ref={curtainRef} className={styles.curtain} aria-hidden="true" />
         <Hero heroImageRef={heroImageRef} />
