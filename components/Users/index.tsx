@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import Swiper from "swiper";
 import "swiper/css";
+import JoinCommunity from "@/components/JoinCommunity";
 import "./users.css";
 
 const USER_BOXES = [
@@ -82,7 +83,8 @@ export default function Users() {
   }, []);
 
   return (
-    <section id="users" className="section section--no-margin users">
+    <>
+      <section id="users" className="section section--no-margin users">
       <h2 className="section__title" data-sal="slide-up" data-sal-duration="1000">
         Users
       </h2>
@@ -131,5 +133,8 @@ export default function Users() {
         </div>
       </div>
     </section>
+
+    <JoinCommunity />
+  </>
   );
 }
