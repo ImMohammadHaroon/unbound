@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-const SAL_THRESHOLD = 0.1;
+const SAL_THRESHOLD = 0.5;
 const SAL_ROOT_MARGIN = "0% 50%";
 const SAL_DISABLE_QUERY = "(max-width: 960px)";
 

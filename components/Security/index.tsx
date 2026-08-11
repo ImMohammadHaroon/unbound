@@ -1,12 +1,18 @@
 "use client";
 
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef } from "react";
 import "./security.css";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const SECURITY_VIDEO =
   "https://www.unboundxinc.com/wp-content/uploads/2025/03/4052869-uhd_3840_2160_25fps.mp4";
 
 export default function Security() {
+  const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -46,9 +52,43 @@ export default function Security() {
     };
   }, []);
 
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+      if (!section) return;
+
+      const columns = gsap.utils.toArray<HTMLElement>(
+        ".security__column",
+        section
+      );
+
+      const timeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 85%",
+          end: "top 40%",
+          scrub: 1,
+        },
+      });
+
+      columns.forEach((column, index) => {
+        timeline.fromTo(
+          column,
+          { y: 56, opacity: 0.4 },
+          { y: 0, opacity: 1, ease: "none", duration: 1 },
+          index * 0.2
+        );
+      });
+    },
+    { scope: sectionRef }
+  );
+
   return (
-    <div className="section-sticky section-sticky-security section-sticky-12 JS-sticky-section">
-      <section className="security" data-sal="slide-up" data-sal-duration="1000">
+    <div
+      ref={sectionRef}
+      className="section-sticky section-sticky-security section-sticky-12 JS-sticky-section"
+    >
+      <section className="security">
         <div className="security__inner">
           <div className="security__column security__column--left">
             <div className="security__background">

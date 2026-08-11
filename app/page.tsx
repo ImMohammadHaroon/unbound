@@ -1,4 +1,4 @@
-import JoinCommunity from "@/components/JoinCommunity";
+import Creators from "@/components/Creators";
 import JoinNowProvider from "@/components/JoinNowProvider";
 import Navbar from "@/components/Navbar";
 import Quotes from "@/components/Quotes";
@@ -27,7 +27,7 @@ export default function Home() {
           <Security />
           <SectionGradient>
             <Users />
-            <JoinCommunity />
+            <Creators />
           </SectionGradient>
           <StickySectionsInit />
         </main>

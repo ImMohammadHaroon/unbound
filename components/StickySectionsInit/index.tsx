@@ -10,7 +10,12 @@ function getSecurityStart(section: HTMLElement) {
   return section.offsetHeight < window.innerHeight ? "top top" : "bottom bottom";
 }
 
-function pinSection(section: HTMLElement, pinSpacing: boolean, end?: ScrollTrigger.Vars["end"]) {
+function pinSection(
+  section: HTMLElement,
+  pinSpacing: boolean,
+  end?: ScrollTrigger.Vars["end"],
+  scrub: ScrollTrigger.Vars["scrub"] = 1
+) {
   return ScrollTrigger.create({
     trigger: section,
     start: () => getSecurityStart(section),
@@ -18,6 +23,7 @@ function pinSection(section: HTMLElement, pinSpacing: boolean, end?: ScrollTrigg
     pin: true,
     pinSpacing,
     anticipatePin: 1,
+    scrub,
     invalidateOnRefresh: true,
   });
 }
@@ -46,13 +52,14 @@ export default function StickySectionsInit() {
               pin: true,
               pinSpacing: false,
               anticipatePin: 1,
+              scrub: 1,
             });
             return;
           }
 
           if (index < sections.length - 1) {
-            const isSecurity = section.classList.contains("sticky-section-security");
-            pinSection(section, isSecurity);
+            const isSecurity = section.classList.contains("section-sticky-security");
+            pinSection(section, isSecurity, undefined, 1);
           }
         });
       },
