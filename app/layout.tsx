@@ -7,7 +7,7 @@ import "@/styles/section-sticky.css";
 
 const figtree = Figtree({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-figtree",
   display: "swap",
 });
