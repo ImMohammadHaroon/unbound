@@ -1,0 +1,48 @@
+/* Footer — matches template app.css + inline .ftr-tagline */
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  margin-inline: auto;
+  margin-bottom: clamp(1.25rem, 0.1657rem + 3.012vi, 1.5rem);
+  padding-inline: clamp(1.25rem, 0.1657rem + 3.012vi, 1.5rem);
+  width: min(1440px, 100%);
+  font-size: clamp(0.875rem, 0.7666rem + 0.3012vi, 1rem);
+  color: #263040;
+}
+
+@media (max-width: 499px) {
+  .footer {
+    row-gap: 5px;
+    justify-content: center;
+  }
+}
+
+.footer p {
+  font-weight: 300;
+  margin: 0;
+}
+
+.footer a {
+  text-decoration: none;
+  color: inherit;
+  transition: 150ms linear all;
+}
+
+.footer a:hover,
+.footer a:active {
+  color: #066bf0;
+}
+
+.ftr-tagline {
+  text-align: center;
+  padding: 0 15px 50px;
+  max-width: 830px;
+  margin: auto;
+  line-height: 1.5;
+  font-size: clamp(0.875rem, 0.7666rem + 0.3012vi, 1rem);
+  font-weight: 300;
+  color: #263040;
+}
