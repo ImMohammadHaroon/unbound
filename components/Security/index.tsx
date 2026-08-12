@@ -8,8 +8,7 @@ import "./security.css";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-const SECURITY_VIDEO =
-  "https://www.unboundxinc.com/wp-content/uploads/2025/03/4052869-uhd_3840_2160_25fps.mp4";
+const SECURITY_VIDEO = "/security-video.mp4";
 
 export default function Security() {
   const sectionRef = useRef<HTMLDivElement>(null);

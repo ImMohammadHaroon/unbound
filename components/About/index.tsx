@@ -1,13 +1,11 @@
 import Image from "next/image";
 import "./about.css";
 
-const IMAGE_BASE = "https://www.unboundxinc.com/wp-content/uploads/2026/06";
-
 const FOUNDERS = [
   {
     name: "Maneesh Awasthi",
     position: "Co-Founder & CEO",
-    image: `${IMAGE_BASE}/maneesh-img.png`,
+    image: "/maneesh-img.png",
     bio: (
       <>
         With over 27 years of experience across institutional finance, structured
@@ -37,7 +35,7 @@ const FOUNDERS = [
   {
     name: "Arnav Awasthi",
     position: "Co-Founder, COO, & Head of Product",
-    image: `${IMAGE_BASE}/arnav-img.png`,
+    image: "/arnav-img.png",
     bio: (
       <>
         As a builder with roots in aerospace engineering and a mind shaped by
