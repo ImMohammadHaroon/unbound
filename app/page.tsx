@@ -12,6 +12,7 @@ import Tools from "@/components/Tools";
 import About from "@/components/About";
 import ContactCta from "@/components/ContactCta";
 import ContactUs from "@/components/ContactUs";
+import Footer from "@/components/Footer";
 import Team from "@/components/Team";
 import UBverse from "@/components/UBverse";
 import Users from "@/components/Users";
@@ -43,6 +44,7 @@ export default function Home() {
           </div>
           <StickySectionsInit />
         </main>
+        <Footer />
       </div>
     </JoinNowProvider>
   );
