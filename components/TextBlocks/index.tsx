@@ -10,7 +10,6 @@ const BLOCKS = [
     image: "/img-01.png",
     width: 890,
     height: 848,
-    sizes: "(max-width: 890px) 100vw, 890px",
   },
   {
     heading: (
@@ -22,17 +21,15 @@ const BLOCKS = [
     ),
     text: "The industry is flooded with lookalike platforms — UnBound X is a leap forward, combining investing with real-time market insights, social learning, and advanced A.I.",
     image: "/img-02.png",
-    width: 990,
-    height: 928,
-    sizes: "(max-width: 990px) 100vw, 990px",
+    width: 700,
+    height: 656,
   },
   {
     heading: "Empowering Investors: Your Voice, Our Future",
     text: "Every member is essential to our evolution. Your insights and feedback fuel our collective growth, ensuring that together, we innovate and adapt continuously.",
     image: "/img-03.png",
-    width: 946,
-    height: 824,
-    sizes: "(max-width: 946px) 100vw, 946px",
+    width: 700,
+    height: 610,
   },
 ] as const;
 
@@ -58,8 +55,13 @@ export default function TextBlocks() {
               alt=""
               width={block.width}
               height={block.height}
-              sizes={block.sizes}
+              sizes="(max-width: 639px) 100vw, 500px"
               className={styles.imageElement}
+              style={
+                {
+                  "--block-aspect": block.width / block.height,
+                } as React.CSSProperties
+              }
             />
           </div>
         </div>

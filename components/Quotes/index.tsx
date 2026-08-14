@@ -56,10 +56,10 @@ export default function Quotes() {
   useGSAP(
     () => {
       const container = containerRef.current;
-      const securitySection = document.querySelector(".section-sticky-security");
+      const nextSection = document.querySelector(".section-gradient");
       const swiper = swiperInstance.current;
 
-      if (!container || !securitySection || !swiper || !swiperReady) return;
+      if (!container || !nextSection || !swiper || !swiperReady) return;
 
       const slideHeight =
         swiper.slides.length === 1
@@ -71,7 +71,7 @@ export default function Quotes() {
       ScrollTrigger.create({
         trigger: container,
         start: "top top+=50%",
-        endTrigger: securitySection,
+        endTrigger: nextSection,
         end: "top top",
         scrub: 1,
         onUpdate: (self) => {
