@@ -15,8 +15,14 @@
   z-index: 12;
 }
 
+/* Template uses 11 here, which leaves the pinned security section (12) floating
+   over this trailing content once the gradient sections have scrolled past. 13
+   keeps the curtain effect while letting this content cover the pinned section. */
 .section-after-sticky {
   position: relative;
-  z-index: 11;
+  z-index: 13;
   background-color: #ffffff;
+  /* Contain the first child's top margin so the white background starts at the
+     wrapper's edge instead of leaving the pinned section visible through it. */
+  display: flow-root;
 }

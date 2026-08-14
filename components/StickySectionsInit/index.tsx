@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-function getSecurityStart(section: HTMLElement) {
+function getPinStart(section: HTMLElement) {
   return section.offsetHeight < window.innerHeight ? "top top" : "bottom bottom";
 }
 
@@ -18,7 +18,7 @@ function pinSection(
 ) {
   return ScrollTrigger.create({
     trigger: section,
-    start: () => getSecurityStart(section),
+    start: () => getPinStart(section),
     end,
     pin: true,
     pinSpacing,
@@ -58,28 +58,8 @@ export default function StickySectionsInit() {
           }
 
           if (index < sections.length - 1) {
-            const isSecurity = section.classList.contains("section-sticky-security");
-            pinSection(section, isSecurity, undefined, 1);
+            pinSection(section, false, undefined, 1);
           }
-        });
-      },
-      "(max-width: 575px)": () => {
-        const security = document.querySelector<HTMLElement>(
-          ".section-sticky-security"
-        );
-        const gradient = document.querySelector<HTMLElement>(".section-gradient");
-
-        if (!security || !gradient) return;
-
-        ScrollTrigger.create({
-          trigger: security,
-          start: "top top",
-          endTrigger: gradient,
-          end: "top top",
-          pin: true,
-          pinSpacing: false,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
         });
       },
     });

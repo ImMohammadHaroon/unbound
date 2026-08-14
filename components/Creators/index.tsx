@@ -1,15 +1,11 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import Swiper from "swiper";
 import "swiper/css";
 import "./creators.css";
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const CREATOR_BOXES = [
   {
@@ -33,7 +29,6 @@ const CREATOR_BOXES = [
 ] as const;
 
 export default function Creators() {
-  const sectionRef = useRef<HTMLElement>(null);
   const swiperRef = useRef<HTMLDivElement>(null);
   const swiperInstance = useRef<Swiper | null>(null);
   const stickyInstance = useRef<{ destroy: () => void } | null>(null);
@@ -115,43 +110,8 @@ export default function Creators() {
     };
   }, []);
 
-  useGSAP(
-    () => {
-      const section = sectionRef.current;
-      if (!section) return;
-
-      const mm = gsap.matchMedia();
-
-      mm.add("(min-width: 576px)", () => {
-        const boxes = gsap.utils.toArray<HTMLElement>(".creators__box", section);
-
-        boxes.forEach((box) => {
-          gsap.fromTo(
-            box,
-            { y: 48, opacity: 0.35 },
-            {
-              y: 0,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: box,
-                start: "top bottom",
-                end: "top 65%",
-                scrub: 1,
-              },
-            }
-          );
-        });
-      });
-
-      return () => mm.revert();
-    },
-    { scope: sectionRef }
-  );
-
   return (
     <section
-      ref={sectionRef}
       id="creators"
       className="section section--no-margin creators JS-creators-section"
     >
@@ -173,6 +133,12 @@ export default function Creators() {
             >
               Build a knowledge ecosystem, together.
             </p>
+
+            <p
+              className="section__description"
+              data-sal="slide-up"
+              data-sal-duration="1000"
+            />
 
             <div
               className="creators__image"
