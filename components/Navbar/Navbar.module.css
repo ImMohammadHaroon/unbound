@@ -8,8 +8,8 @@
 
 .headerHomeIntro {
   opacity: 0;
-  animation: headerFadeIn 1.5s ease-in-out forwards;
-  animation-delay: 0.5s;
+  animation: headerFadeIn 0.4s ease-in-out forwards;
+  animation-delay: 0.1s;
 }
 
 .headerHomeIntro.headerFixed {
